@@ -7,10 +7,12 @@ include 'connection.php';
 	<title>Home</title>
 	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
   	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
-  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <script type="text/javascript">
@@ -33,7 +35,18 @@ include 'connection.php';
 			if(!this.checked){
 				$("#selectAll").prop("checked",false);
 			}
-		})
+		});
+		$('#bday').datepicker({
+		    onSelect: function(value, ui) {
+		        var today = new Date(), 
+		            age = today.getFullYear() - ui.selectedYear;
+		        $('#age').text(age);
+		    },
+		    maxDate: '+0d',
+		    changeMonth: true,
+		    changeYear: true,
+		    defaultDate: '-18yr',
+		});
 	});
 </script>
 <body>
@@ -109,7 +122,7 @@ include 'connection.php';
 	<div id="addAddressModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form>
+				<form action = "" method="post">
 					<div class="modal-header">						
 						<h4 class="modal-title">Add Record</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -137,12 +150,12 @@ include 'connection.php';
 						</div>
 						<div class="form-group">
 							<label>Birthday</label>
-							<input type="date" name="bday" required class="form-control">
+							<input id="bday" required class="form-control">
 							
 						</div>
 						<div class="form-group">
 							<label>Age</label>
-							<input type="text" class="form-control" required name="age" readonly="true">
+							<input type="text" id="age" class="form-control" required  >
 						</div>
 						<div class="form-group">
 							<label>Birthplace</label>
@@ -151,8 +164,16 @@ include 'connection.php';
 					</div>
 					<div class="modal-footer">
 						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						<input type="submit" class="btn btn-success" value="Add">
+						<input type="submit" class="btn btn-success" value="Add" name="addBtn">
 					</div>
+					<?php
+					if(isset($_POST['addBtn'])){
+						$bday = $_POST['bday'];
+						//$date_now = date();
+
+
+					}
+					?>
 				</form>
 			</div>
 		</div>
@@ -184,6 +205,9 @@ include 'connection.php';
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+		
+	</script>
 
 </body>
 </html>
