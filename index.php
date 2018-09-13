@@ -106,7 +106,8 @@ include 'connection.php';
 						<td><?php echo $row['bday'];?></td>
 						<td> 
 							<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit" id = "<?php echo $row['rec_id'];?>">&#xE254;</i></a>
-                            <a href="#deleteEmployeeModal" class="delete" data-toggle="modal" ><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+							<!-- delete button add -->
+                            <a class="delete_product" data-id="<?php echo $row['rec_id']; ?>" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i>
                         </td>
                        <?php }
 							
@@ -119,94 +120,49 @@ include 'connection.php';
 				</tbody>
 		</div>
 	</div>
-	<div id="addAddressModal" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form action = "" method="post">
-					<div class="modal-header">						
-						<h4 class="modal-title">Add Record</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					</div>
-					<div class="modal-body">					
-						<div class="form-group">
-							<label>Last Name</label>
-							<input type="text" class="form-control" required name="lname">
-						</div>
-						<div class="form-group">
-							<label>First Name</label>
-							<input type="text" class="form-control" required name="fname">
-						</div>
-						<div class="form-group">
-							<label>Middle Name</label>
-							<input type="text" class="form-control" required name="mname">
-						</div>
-						<div class="form-group">
-							<label>Address</label>
-							<input type="text" class="form-control" required name="address">
-						</div>
-						<div class="form-group">
-							<label>Contact Number</label>
-							<input type="text" class="form-control" required name="cnumber">
-						</div>
-						<div class="form-group">
-							<label>Birthday</label>
-							<input id="bday" required class="form-control">
-							
-						</div>
-						<div class="form-group">
-							<label>Age</label>
-							<input type="text" id="age" class="form-control" required  >
-						</div>
-						<div class="form-group">
-							<label>Birthplace</label>
-							<input type="text" class="form-control" required name="bplace">
-						</div>				
-					</div>
-					<div class="modal-footer">
-						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						<input type="submit" class="btn btn-success" value="Add" name="addBtn">
-					</div>
-					<?php
-					if(isset($_POST['addBtn'])){
-						$bday = $_POST['bday'];
-						//$date_now = date();
-
-
-					}
-					?>
-				</form>
-			</div>
-		</div>
-	</div>
-	<!-- Delete Modal HTML -->
-	<div id="addAddressModal" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form>
-					<div class="modal-header">						
-						<h4 class="modal-title">Delete Record</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					</div>
-					<div class="modal-body">					
-						<p>Are you sure you want to delete these Records?</p>
-						<p class="text-warning"><small>This action cannot be undone.</small></p>
-					</div>
-					<div class="modal-footer">
-						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						<input type="submit" class="btn btn-danger" value="Delete" name="deleteBtn">
-
-						<?php
-							if(isset($_POST['deleteBtn'])){
-
-							}
-						?>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+	<!-- add to the project -->
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootbox.min.js"></script>
 	<script type="text/javascript">
+		$(document).ready(function(){
 		
+		$('.delete_product').click(function(e){
+			
+			e.preventDefault();
+			
+			var pid = $(this).attr('data-id');
+			var parent = $(this).parent("td").parent("tr");
+			
+			bootbox.dialog({
+			  message: "Are you sure you want to Delete ?",
+			  title: "<i class='glyphicon glyphicon-trash'></i> Delete !",
+			  buttons: {
+				success: {
+				  label: "No",
+				  className: "btn-success",
+				  callback: function() {
+					 $('.bootbox').modal('hide');
+				  }
+				},
+				danger: {
+				  label: "Delete!",
+				  className: "btn-danger",
+				  callback: function() {
+					  $.post('delete.php', { 'delete':pid })
+					  .done(function(response){
+						  bootbox.alert(response);
+						  parent.fadeOut('slow');
+					  })
+					  .fail(function(){
+						  bootbox.alert('Something Went Wrog ....');
+					  })
+					  					  
+				  }
+				}
+			  }
+			});
+		});
+	});
 	</script>
 
 </body>
